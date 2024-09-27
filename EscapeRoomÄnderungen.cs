@@ -71,10 +71,8 @@ class EscapeRoom
                 }
                 else
                 {
-
                     mapArray[x, y] |= ObjectType.Ground;
                 }
-
             }
         }
     }
@@ -110,7 +108,7 @@ class EscapeRoom
         }
     }
 
-    static void PlayerMoved(int PlayerX, int PlayerY, int HorizontalX, int VerticalY)
+    static void PlayerMoved(int HorizontalX, int VerticalY)
     {
         int newPlayerPositionX = PlayerX + HorizontalX;
         int newPlayerPositionY = PlayerY + VerticalY;
@@ -124,8 +122,6 @@ class EscapeRoom
             PlayerX = newPlayerPositionX;
             PlayerY = newPlayerPositionY;
             mapArray[PlayerX, PlayerY] = ObjectType.Player;
-
-
         }
     }
     static void HandlePlayerMovement()
@@ -142,25 +138,27 @@ class EscapeRoom
                 case ConsoleKey.LeftArrow:
                 case ConsoleKey.A:
                 case ConsoleKey.NumPad4:
-                    PlayerMoved(PlayerX, PlayerY, -1, 0);
+                    PlayerMoved(0 , -1);
                     break;
 
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.NumPad8:
                 case ConsoleKey.W:
-                    PlayerMoved(PlayerX, PlayerY, 0, +1);
+                    PlayerMoved(-1,0);
                     break;
 
                 case ConsoleKey.RightArrow:
                 case ConsoleKey.NumPad6:
                 case ConsoleKey.D:
-                    PlayerMoved(PlayerX, PlayerY, +1, 0);
+                    PlayerMoved(0,+1);
+
                     break;
 
                 case ConsoleKey.DownArrow:
                 case ConsoleKey.NumPad2:
                 case ConsoleKey.S:
-                    PlayerMoved(PlayerX, PlayerY, +1, 0);
+                    PlayerMoved(+1,0);
+
                     break;
             }
             Console.Clear();
