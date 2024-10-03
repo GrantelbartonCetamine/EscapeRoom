@@ -1,5 +1,4 @@
 using System;
-
 class EscapeRoom
 {
     static int height;
@@ -10,11 +9,8 @@ class EscapeRoom
     static int KeyY = 0;
     static int DoorX = 0;
     static int DoorY = 0;
-
     static bool haskey = false;
-
     static Random random = new Random();
-
     enum ObjectType
     {
         Ground,
@@ -27,7 +23,6 @@ class EscapeRoom
     static void Main()
     {
         var random = new Random();
-
         HandleMapSize();
         InitialzeMap();
         SetDoortoMap();
@@ -36,7 +31,6 @@ class EscapeRoom
         CheckforKey();
         PrintMap();
         HandlePlayerMovement();
-
     }
     static void PlayerGreeting()
     {
@@ -46,12 +40,10 @@ class EscapeRoom
     {
         {
             Console.WriteLine("Before you can Play Enter youre Prefered Map Size Recomended size : (20,20)");
-
             while (true)
             {
                 Console.WriteLine("Height: ");
                 string userInput = Console.ReadLine();
-
                 if (int.TryParse(userInput, out height) && height >= 5)
                 {
                     Console.WriteLine($"Set Map height to {height}");
@@ -62,12 +54,10 @@ class EscapeRoom
                     Console.WriteLine("Invalid input. Please enter a valid height (integer ≥ 5).");
                 }
             }
-
             while (true)
             {
                 Console.WriteLine("Width: ");
                 string userInput = Console.ReadLine();
-
                 if (int.TryParse(userInput, out width) && width >= 5)
                 {
                     Console.WriteLine($"Set Map width to {width}");
@@ -86,18 +76,15 @@ class EscapeRoom
         PlayerY = random.Next(1, width - 1);
         mapArray[PlayerX, PlayerY] = ObjectType.Player;
     }
-
     static void SetKeytoMap()
     {
         KeyX = random.Next(1, height - 1);
         KeyY = random.Next(1, width - 1);
         mapArray[KeyX, KeyY] = ObjectType.Key;
     }
-
     static void SetDoortoMap()
     {
         int randomwall = random.Next(3);
-
         if (randomwall == 0)
         {
             Console.BackgroundColor = ConsoleColor.Yellow;
@@ -106,7 +93,6 @@ class EscapeRoom
             DoorY = random.Next(1, width - 1);
             Console.ResetColor();
         }
-
         else if (randomwall == 1)
         {
             Console.BackgroundColor = ConsoleColor.Yellow;
@@ -115,7 +101,6 @@ class EscapeRoom
             DoorY = random.Next(1, height - 1);
             Console.ResetColor();
         }
-
         else if (randomwall == 2)
         {
             Console.BackgroundColor = ConsoleColor.Yellow;
@@ -124,7 +109,6 @@ class EscapeRoom
             DoorY = width - 1;
             Console.ResetColor();
         }
-
         else if (randomwall == 3)
         {
             Console.BackgroundColor = ConsoleColor.Yellow;
@@ -132,14 +116,19 @@ class EscapeRoom
             DoorX = random.Next(1, width - 1);
             DoorY = height - 1;
             Console.ResetColor();
-
         }
         mapArray[DoorX, DoorY] = ObjectType.Door;
     }
+    static void WinLogic()
+    {
+        if (mapArray[PlayerX, PlayerY] == ObjectType.Door && haskey == true)
+        {
+            Environment.Exit(0);
+        }
 
+    }
     static void CheckforKey()
     {
-
         if (mapArray[PlayerX, PlayerY] == ObjectType.Key)
         {
             haskey = true;
@@ -180,23 +169,19 @@ class EscapeRoom
                         Console.Write(" ");
                         Console.ResetColor();
                         break;
-
                     case ObjectType.Player:
                         Console.Write("P");
                         break;
-
                     case ObjectType.Wall:
                         Console.BackgroundColor = ConsoleColor.Green;
                         Console.Write(" ");
                         Console.ResetColor();
                         break;
-
                     case ObjectType.Door:
                         Console.BackgroundColor = ConsoleColor.Red;
                         Console.Write("D");
                         Console.ResetColor();
                         break;
-
                     case ObjectType.Key:
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("K");
@@ -207,33 +192,30 @@ class EscapeRoom
             Console.WriteLine();
         }
     }
-
     static void PlayerMoved(int HorizontalX, int VerticalY)
     {
         int newPlayerPositionX = PlayerX + HorizontalX;
         int newPlayerPositionY = PlayerY + VerticalY;
-
-        if (newPlayerPositionX > 0 && newPlayerPositionX < height &&
-            newPlayerPositionY > 0 && newPlayerPositionY < width &&
-            mapArray[newPlayerPositionX, newPlayerPositionY] != ObjectType.Wall)
+        if (newPlayerPositionX < 0 || newPlayerPositionX >= height ||
+            newPlayerPositionY < 0 || newPlayerPositionY >= width ||
+            mapArray[newPlayerPositionX, newPlayerPositionY] == ObjectType.Wall ||
+            mapArray[newPlayerPositionX, newPlayerPositionY] == ObjectType.Door && !haskey)
         {
-            mapArray[PlayerX, PlayerY] = ObjectType.Ground;
-            PlayerX = newPlayerPositionX;
-            PlayerY = newPlayerPositionY;
-            mapArray[PlayerX, PlayerY] = ObjectType.Player;
+            return;
         }
+        mapArray[PlayerX, PlayerY] = ObjectType.Ground;
+        PlayerX = newPlayerPositionX;
+        PlayerY = newPlayerPositionY;
+        CheckforKey();
+        mapArray[PlayerX, PlayerY] = ObjectType.Player;
     }
-
     static void HandlePlayerMovement()
     {
-
         Console.Write("You can Press W for going Forward\nA for going Left\nS for going Back \nAnd D for going to the Right");
         Console.WriteLine("\nOr you can use Numpad or Arrow buttons");
-
         while (true)
         {
             ConsoleKeyInfo keyInfo = Console.ReadKey();
-
             switch (keyInfo.Key)
             {
                 case ConsoleKey.LeftArrow:
@@ -241,19 +223,16 @@ class EscapeRoom
                 case ConsoleKey.NumPad4:
                     PlayerMoved(0, -1);
                     break;
-
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.NumPad8:
                 case ConsoleKey.W:
                     PlayerMoved(-1, 0);
                     break;
-
                 case ConsoleKey.RightArrow:
                 case ConsoleKey.NumPad6:
                 case ConsoleKey.D:
                     PlayerMoved(0, +1);
                     break;
-
                 case ConsoleKey.DownArrow:
                 case ConsoleKey.NumPad2:
                 case ConsoleKey.S:
@@ -265,6 +244,4 @@ class EscapeRoom
             PrintMap();
         }
     }
-
-
 }
