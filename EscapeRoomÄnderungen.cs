@@ -31,6 +31,7 @@ class EscapeRoom
         CheckforKey();
         PrintMap();
         HandlePlayerMovement();
+        WinLogic();
     }
     static void PlayerGreeting()
     {
@@ -51,7 +52,7 @@ class EscapeRoom
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input. Please enter a valid height (integer ≥ 5).");
+                    Console.WriteLine("Invalid input. Please enter a valid height.");
                 }
             }
             while (true)
@@ -65,7 +66,7 @@ class EscapeRoom
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input. Please enter a valid width (integer ≥ 5).");
+                    Console.WriteLine("Invalid input. Please enter a valid width.");
                 }
             }
         }
@@ -78,13 +79,20 @@ class EscapeRoom
     }
     static void SetKeytoMap()
     {
-        KeyX = random.Next(1, height - 1);
-        KeyY = random.Next(1, width - 1);
+        do
+        {
+            KeyX = random.Next(1, height - 1);
+            KeyY = random.Next(1, width - 1);
+
+        } while (mapArray[KeyX, KeyY] != ObjectType.Ground); 
+
         mapArray[KeyX, KeyY] = ObjectType.Key;
     }
     static void SetDoortoMap()
     {
-        int randomwall = random.Next(3);
+        int randomwall = random.Next(4);
+
+
         if (randomwall == 0)
         {
             Console.BackgroundColor = ConsoleColor.Yellow;
@@ -98,7 +106,7 @@ class EscapeRoom
             Console.BackgroundColor = ConsoleColor.Yellow;
             Console.WriteLine(" ");
             DoorX = height - 1;
-            DoorY = random.Next(1, height - 1);
+            DoorY = random.Next(1, width - 1);
             Console.ResetColor();
         }
         else if (randomwall == 2)
@@ -113,7 +121,7 @@ class EscapeRoom
         {
             Console.BackgroundColor = ConsoleColor.Yellow;
             Console.WriteLine(" ");
-            DoorX = random.Next(1, width - 1);
+            DoorX = random.Next(1, height - 1);
             DoorY = height - 1;
             Console.ResetColor();
         }
@@ -123,9 +131,14 @@ class EscapeRoom
     {
         if (mapArray[PlayerX, PlayerY] == ObjectType.Door && haskey == true)
         {
+            Console.Clear();
+            Console.WriteLine("Congratulations! You've found the door and escaped!");
             Environment.Exit(0);
         }
-
+        else {
+            Console.Write("no need key");
+            return;
+        }
     }
     static void CheckforKey()
     {
@@ -150,7 +163,7 @@ class EscapeRoom
                 }
                 else
                 {
-                    mapArray[x, y] |= ObjectType.Ground;
+                    mapArray[x, y] = ObjectType.Ground;
                 }
             }
         }
@@ -208,6 +221,7 @@ class EscapeRoom
         PlayerY = newPlayerPositionY;
         CheckforKey();
         mapArray[PlayerX, PlayerY] = ObjectType.Player;
+        WinLogic();
     }
     static void HandlePlayerMovement()
     {
@@ -240,6 +254,7 @@ class EscapeRoom
                     break;
             }
             CheckforKey();
+            WinLogic();
             Console.Clear();
             PrintMap();
         }
