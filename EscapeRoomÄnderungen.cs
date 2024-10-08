@@ -84,7 +84,7 @@ class EscapeRoom
             KeyX = random.Next(1, height - 1);
             KeyY = random.Next(1, width - 1);
 
-        } while (mapArray[KeyX, KeyY] != ObjectType.Ground); 
+        } while (mapArray[KeyX, KeyY] != ObjectType.Ground);
 
         mapArray[KeyX, KeyY] = ObjectType.Key;
     }
@@ -135,7 +135,8 @@ class EscapeRoom
             Console.WriteLine("Congratulations! You've found the door and escaped!");
             Environment.Exit(0);
         }
-        else {
+        else
+        {
             Console.Write("no need key");
             return;
         }
